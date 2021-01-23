@@ -10,12 +10,12 @@ script:
   - docker run -e CI=true abhyudaya/react-rest npm test -- --coverage
 
 after_success:
-  - docker build -t abhyudaya/multi-client ./client 
-  - docker build -t abhyudaya/multi-server ./server 
+  - docker build -t abhyudaya/multi-client ./client
+  - docker build -t abhyudaya/multi-server ./server
   - docker build -t abhyudaya/multi-nginx ./nginx
   - docker build -t abhyudaya/multi-worker ./worker
   # Login into the docker
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker login -u abhyudaya1 -p "Kalumohanty@1"
   # take the images and push into docker hub
   - docker push abhyudaya/multi-client
   - docker push abhyudaya/multi-nginx
