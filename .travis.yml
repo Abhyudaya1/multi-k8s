@@ -15,7 +15,7 @@ after_success:
   - docker build -t abhyudaya/multi-nginx ./nginx
   - docker build -t abhyudaya/multi-worker ./worker
   # Login into the docker
-  - docker login -u abhyudaya1 -p "Kalumohanty@1"
+  - docker login -u abhyudaya1 -p Kalumohanty@1
   # take the images and push into docker hub
   - docker push abhyudaya/multi-client
   - docker push abhyudaya/multi-nginx
