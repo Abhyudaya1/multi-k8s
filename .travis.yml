@@ -9,3 +9,7 @@ before_install:
   - source $HOME/google-cloud-sdk/path.bash.inc # Setup some env variables for GCloud
   - gcloud components update kubectl  #Update the kubectl with gcloud
   - gcloud auth activate-service-account --key-file service-account.json # Authenticate with the service account that we create in gcloud using the key.json file we generate
+  - gcloud config set project zero-integration-test-aaa # Configuring the project where our K8s is located
+  - gcloud config set compute/zone us-central1-c
+  - gcloud container clusters get-credentials cluster-1
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
