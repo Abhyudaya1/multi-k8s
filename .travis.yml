@@ -1,15 +1,30 @@
 sudo: required
 
+env:
+  global:
+    - SHA=$(git rev-parse HEAD) # For unique no when commited
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 services:
   - docker
-
 before_install:
   - openssl aes-256-cbc -K $encrypted_9f3b5599b056_key -iv $encrypted_9f3b5599b056_iv -in service-account.json.enc -out service-account.json -d # Generated while using travis encrypt-file command
   - curl https://sdk.cloud.google.com | bash > /dev/null; #Install Gcloud CLI
   - source $HOME/google-cloud-sdk/path.bash.inc # Setup some env variables for GCloud
   - gcloud components update kubectl  #Update the kubectl with gcloud
   - gcloud auth activate-service-account --key-file service-account.json # Authenticate with the service account that we create in gcloud using the key.json file we generate
+  #To be done also in gcloud shell to use kubectl in the cloud shell
   - gcloud config set project zero-integration-test-aaa # Configuring the project where our K8s is located
   - gcloud config set compute/zone us-central1-c
   - gcloud container clusters get-credentials cluster-1
+  #######
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t abhyudaya/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run abhyudaya/react-test npm run test -- --coverage
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on: 
+    branch: master
