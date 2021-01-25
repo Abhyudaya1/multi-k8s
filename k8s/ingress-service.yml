@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations: #addtional config operations for ingress objects created
+    kubernetes.io/ingress.class: nginx #Type of ingress service provided by nginx
+    nginx.ingress.kubernetes.io/rewrite-target: / # Remove the /api from the path when the request is made
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client-cluster-ip-service
+                port: 
+                  number: 3000
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: server-cluster-ip-service
+                port: 
+                  number: 5000
